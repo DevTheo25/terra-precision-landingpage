@@ -35,7 +35,7 @@ const Header = () => {
   // Função para redirecionar para a plataforma
   const handleLogin = () => {
     // Em produção, usar o domínio real
-    const platformUrl = import.meta.env.VITE_PLATFORM_URL || 'http://localhost:5173';
+    const platformUrl = import.meta.env.VITE_PLATFORM_URL || 'https://terra-precision-platform.onrender.com';
     window.location.href = platformUrl;
   };
 
