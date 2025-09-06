@@ -1,9 +1,16 @@
 import { useEffect, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play } from "lucide-react";
-import heroImage from "@/assets/hero-tech-agriculture.jpg";
+// Importar todas as imagens
+import heroImage1 from "@/assets/hero-tech-agriculture_5.jpg";
+import heroImage2 from "@/assets/hero-tech-agriculture_4.jpg";
+import heroImage3 from "@/assets/hero-tech-agriculture_3.jpg";
+import heroImage5 from "@/assets/hero-tech-agriculture.jpg";
 import FreeTrialModal from "@/components/FreeTrialModal";
+
+// Array das imagens
+const heroImages = [heroImage5,heroImage1, heroImage2, heroImage3];
 
 // Hook para counter animation
 const useCounter = (end: number, duration: number = 2) => {
@@ -29,6 +36,7 @@ const useCounter = (end: number, duration: number = 2) => {
 const HeroSection = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { scrollY } = useScroll();
   
   // Parallax effect no background
@@ -42,6 +50,17 @@ const HeroSection = () => {
 
   useEffect(() => {
     setIsVisible(true);
+  }, []);
+
+  // Efeito para trocar imagens automaticamente
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => 
+        prevIndex === heroImages.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 5000); // Troca a cada 5 segundos
+
+    return () => clearInterval(interval);
   }, []);
 
   const scrollToContact = () => {
@@ -142,16 +161,46 @@ const HeroSection = () => {
   return (
     <>
       <section id="inicio" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background Image com Parallax */}
-        <motion.div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ 
-            backgroundImage: `url(${heroImage})`,
-            y: backgroundY 
-          }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-secondary/80 via-secondary/60 to-transparent"></div>
-        </motion.div>
+        {/* Background Images com Slideshow e Zoom */}
+        <div className="absolute inset-0">
+          <AnimatePresence>
+            {heroImages.map((image, index) => (
+              index === currentImageIndex && (
+                <motion.div
+                  key={`${index}-${currentImageIndex}`}
+                  className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                  style={{ 
+                    backgroundImage: `url(${image})`,
+                    y: backgroundY 
+                  }}
+                  initial={{ 
+                    opacity: 0, 
+                    scale: 1.05
+                  }}
+                  animate={{ 
+                    opacity: 1, 
+                    scale: 1.15, // Zoom lento mais pronunciado
+                    transition: {
+                      opacity: { duration: 0.8, ease: "easeOut" },
+                      scale: { duration: 5, ease: "linear" }
+                    }
+                  }}
+                  exit={{ 
+                    opacity: 0,
+                    scale: 1.2,
+                    transition: { 
+                      opacity: { duration: 0.8, ease: "easeIn" },
+                      scale: { duration: 0.8, ease: "easeIn" }
+                    }
+                  }}
+                >
+                  {/* Overlay escuro */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-secondary/80 via-secondary/60 to-transparent"></div>
+                </motion.div>
+              )
+            ))}
+          </AnimatePresence>
+        </div>
 
         {/* Content com Parallax */}
         <motion.div 
