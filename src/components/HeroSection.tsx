@@ -3,14 +3,28 @@ import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play } from "lucide-react";
 // Importar todas as imagens
-import heroImage1 from "@/assets/hero-tech-agriculture_5.jpg";
-import heroImage2 from "@/assets/hero-tech-agriculture_4.jpg";
-import heroImage3 from "@/assets/hero-tech-agriculture_3.jpg";
-import heroImage5 from "@/assets/hero-tech-agriculture.jpg";
+import heroImage1 from "@/assets/hero-tech-agriculture_5.svg";
+import heroImage2 from "@/assets/hero-tech-agriculture_4.svg";
+import heroImage3 from "@/assets/hero-tech-agriculture_3.svg";
+import heroImage5 from "@/assets/hero-tech-agriculture.svg";
 import FreeTrialModal from "@/components/FreeTrialModal";
 
 // Array das imagens
-const heroImages = [heroImage5,heroImage1, heroImage2, heroImage3];
+const heroImages = [heroImage5, heroImage1, heroImage2, heroImage3];
+
+// Função para pré-carregar imagens
+const preloadImages = (images: string[]) => {
+  return Promise.all(
+    images.map(src => 
+      new Promise<void>((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve();
+        img.onerror = () => reject();
+        img.src = src;
+      })
+    )
+  );
+};
 
 // Hook para counter animation
 const useCounter = (end: number, duration: number = 2) => {
@@ -37,6 +51,7 @@ const HeroSection = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
   const { scrollY } = useScroll();
   
   // Parallax effect no background
@@ -48,12 +63,25 @@ const HeroSection = () => {
   const costReductionCount = useCounter(30, 2);
   const productivityCount = useCounter(25, 2.2);
 
+  // Pré-carregar todas as imagens
   useEffect(() => {
-    setIsVisible(true);
+    preloadImages(heroImages)
+      .then(() => {
+        setImagesLoaded(true);
+        setIsVisible(true);
+      })
+      .catch((error) => {
+        console.error("Erro ao carregar imagens:", error);
+        // Mesmo com erro, permite continuar
+        setImagesLoaded(true);
+        setIsVisible(true);
+      });
   }, []);
 
   // Efeito para trocar imagens automaticamente
   useEffect(() => {
+    if (!imagesLoaded) return; // Só inicia o slideshow após carregar as imagens
+    
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => 
         prevIndex === heroImages.length - 1 ? 0 : prevIndex + 1
@@ -61,7 +89,7 @@ const HeroSection = () => {
     }, 5000); // Troca a cada 5 segundos
 
     return () => clearInterval(interval);
-  }, []);
+  }, [imagesLoaded]);
 
   const scrollToContact = () => {
     const element = document.getElementById('contato');
@@ -164,7 +192,7 @@ const HeroSection = () => {
         {/* Background Images com Slideshow e Zoom */}
         <div className="absolute inset-0">
           <AnimatePresence>
-            {heroImages.map((image, index) => (
+            {imagesLoaded && heroImages.map((image, index) => (
               index === currentImageIndex && (
                 <motion.div
                   key={`${index}-${currentImageIndex}`}
