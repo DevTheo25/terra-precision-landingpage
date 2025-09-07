@@ -181,7 +181,7 @@ const HeroSection = () => {
                     opacity: 1, 
                     scale: 1.15, // Zoom lento mais pronunciado
                     transition: {
-                      opacity: { duration: 0.8, ease: "easeOut" },
+                      opacity: { duration: 1.2, ease: "easeOut" },
                       scale: { duration: 5, ease: "linear" }
                     }
                   }}

@@ -25,18 +25,46 @@ const Header = () => {
   }, []);
 
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-    setIsMenuOpen(false);
+    console.log('Tentando navegar para:', sectionId);
+    
+    // Adiciona um pequeno delay para garantir que o DOM está pronto
+    setTimeout(() => {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        // Calcula a posição considerando o header fixo
+        const headerOffset = 80; // altura do header
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+        
+        console.log('Navegação realizada para:', sectionId);
+      } else {
+        console.error('Elemento não encontrado:', sectionId);
+      }
+    }, 100);
+    
+    // Fecha o menu com delay para permitir a animação
+    setTimeout(() => {
+      setIsMenuOpen(false);
+    }, 1000);
   };
 
   // Função para redirecionar para a plataforma
   const handleLogin = () => {
-    // Em produção, usar o domínio real
+    console.log('Login clicado');
     const platformUrl = import.meta.env.VITE_PLATFORM_URL || 'https://terra-precision-platform.onrender.com';
-    window.location.href = platformUrl;
+    
+    // Fecha o menu antes de redirecionar
+    setIsMenuOpen(false);
+    
+    // Pequeno delay para permitir animação antes do redirecionamento
+    setTimeout(() => {
+      window.location.href = platformUrl;
+    }, 200);
   };
 
   // Variantes de animação
@@ -191,7 +219,7 @@ const Header = () => {
                 onClick={handleLogin}
                 className={`relative group transition-all duration-300 ${
                   isScrolled 
-                    ? 'text-foreground hover:text-primary' 
+                    ? 'text-foreground' 
                     : 'text-white hover:bg-white/10'
                 }`}
               >
@@ -269,7 +297,7 @@ const Header = () => {
               
               {/* Menu Content */}
               <motion.div
-                className="md:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-xl border-t border-border shadow-2xl z-50"
+                className="md:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-xl border-t border-white/20 shadow-2xl z-50"
                 variants={mobileMenuVariants}
                 initial="closed"
                 animate="open"
@@ -279,43 +307,57 @@ const Header = () => {
                   {menuItems.map((item, index) => (
                     <motion.button
                       key={item.id}
-                      onClick={() => scrollToSection(item.id)}
-                      className="text-left text-lg font-medium text-white hover:text-primary transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log('Clique no item:', item.label, item.id);
+                        scrollToSection(item.id);
+                      }}
+                      className="text-left text-lg font-medium text-white hover:text-green-400 transition-colors py-2 px-4 rounded-lg hover:bg-white/10 cursor-pointer"
                       variants={mobileItemVariants}
                       initial="closed"
                       animate="open"
                       exit="closed"
                       transition={{ delay: index * 0.1 }}
                       whileHover={{ x: 10 }}
+                      whileTap={{ scale: 0.95 }}
                     >
                       {item.label}
                     </motion.button>
                   ))}
                   
-                  {/* Botão de Login Mobile */}
+                  {/* Botões de Ação Mobile */}
                   <motion.div
                     variants={mobileItemVariants}
-                    custom={menuItems.length}
-                    className="pt-4 border-t border-white/20"
+                    initial="closed"
+                    animate="open"
+                    exit="closed"
+                    transition={{ delay: menuItems.length * 0.1 }}
+                    className="pt-4 border-t border-white/20 space-y-3"
                   >
-                    <Button 
-                      variant="outline"
-                      size="lg"
-                      onClick={handleLogin}
-                      className="w-full mb-4 text-white border-white hover:bg-white hover:text-primary"
+                    {/* Botão de Login Mobile */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log('Login mobile clicado');
+                        handleLogin();
+                      }}
+                      className="w-full flex items-center justify-center px-4 py-3 bg-transparent border-2 border-white text-white rounded-lg hover:bg-white hover:text-black transition-all duration-300 font-medium"
                     >
                       <LogIn className="h-4 w-4 mr-2" />
                       Acessar Plataforma
-                    </Button>
+                    </button>
                     
-                    <Button 
-                      variant="cta" 
-                      size="lg"
-                      onClick={() => scrollToSection('contato')}
-                      className="w-full"
+                    {/* Botão CTA Mobile */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log('CTA mobile clicado');
+                        scrollToSection('contato');
+                      }}
+                      className="w-full flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300 font-medium"
                     >
                       Solicite um Orçamento
-                    </Button>
+                    </button>
                   </motion.div>
                 </nav>
               </motion.div>
