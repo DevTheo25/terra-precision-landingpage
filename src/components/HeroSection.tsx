@@ -9,6 +9,14 @@ import heroImage3 from "@/assets/hero-tech-agriculture_3.svg";
 import heroImage5 from "@/assets/hero-tech-agriculture.svg";
 import FreeTrialModal from "@/components/FreeTrialModal";
 
+
+declare global {
+  interface Window {
+    gtag: (...args: any[]) => void;
+  }
+}
+
+
 // Array das imagens
 const heroImages = [heroImage5, heroImage1, heroImage2, heroImage3];
 
@@ -99,6 +107,11 @@ const HeroSection = () => {
   };
 
   const handleOpenModal = () => {
+    window.gtag('event', 'click', {
+      event_category: 'CTA', 
+      event_label: 'Teste Grátis'
+    });
+    
     setIsModalOpen(true);
   };
 

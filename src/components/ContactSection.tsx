@@ -13,6 +13,12 @@ import {
   Clock
 } from "lucide-react";
 
+declare global {
+  interface Window {
+    gtag: (...args: any[]) => void;
+  }
+}
+
 const contactMethods = [
   {
     icon: MessageCircle,
@@ -26,15 +32,15 @@ const contactMethods = [
     icon: Mail,
     title: "E-mail",
     description: "Envie sua mensagem",
-    info: "terraprecision3@gmail.com",
-    link: "mailto:terraprecision3@gmail.com"
+    info: "contato@terraprecision.com.br",
+    link: "mailto:contato@terraprecision.com.br"
   },
   {
     icon: Globe,
-    title: "Website",
-    description: "Visite nosso site",
-    info: "terraprecision.com.br",
-    link: "https://terraprecision.com.br"
+    title: "Plataforma",
+    description: "Visite nossa plataforma",
+    info: "app.terraprecision.com.br",
+    link: "https://app.terraprecision.com.br"
   }
 ];
 
@@ -42,6 +48,10 @@ const ContactSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
+    window.gtag('event', 'click', {
+          event_category: 'CTA', 
+          event_label: 'Teste Grátis - Contato Section'
+        });
     setIsModalOpen(true);
   };
 

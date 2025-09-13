@@ -96,7 +96,7 @@ const FreeTrialModal = ({ isOpen, onClose }: FreeTrialModalProps) => {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('https://formspree.io/f/xrbakkqa', {
+      const response = await fetch('https://formspree.io/f/movnbbnj', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

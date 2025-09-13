@@ -54,18 +54,19 @@ const Header = () => {
   };
 
   // Função para redirecionar para a plataforma
-  const handleLogin = () => {
-    console.log('Login clicado');
-    const platformUrl = import.meta.env.VITE_PLATFORM_URL || 'https://terra-precision-platform.onrender.com';
-    
-    // Fecha o menu antes de redirecionar
-    setIsMenuOpen(false);
-    
-    // Pequeno delay para permitir animação antes do redirecionamento
-    setTimeout(() => {
-      window.location.href = platformUrl;
-    }, 200);
-  };
+  const handleLogin = () => {
+    console.log('Login clicado');
+    const platformUrl = import.meta.env.VITE_PLATFORM_URL || 'https://terra-precision-platform.onrender.com';
+    
+    // Fecha o menu antes de redirecionar
+    setIsMenuOpen(false);
+    
+    // Pequeno delay para permitir animação antes do redirecionamento
+    setTimeout(() => {
+      // Abre a URL em uma nova aba
+      window.open(platformUrl, '_blank');
+    }, 200);
+  };
 
   // Variantes de animação
   const headerVariants: Variants = {

@@ -28,7 +28,7 @@ return (
                 <Phone className="h-5 w-5" />
               </a>
               <a 
-                href="mailto:terraprecision3@gmail.com"
+                href="mailto:contato@terraprecision.com.br"
                 className="text-secondary-foreground/60 hover:text-primary transition-colors"
               >
                 <Mail className="h-5 w-5" />
@@ -65,7 +65,7 @@ return (
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 text-primary" />
-                <span>terraprecision3@gmail.com</span>
+                <span>contato@terraprecision.com.br</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Globe className="h-4 w-4 text-primary" />

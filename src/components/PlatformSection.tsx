@@ -1,20 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, useInView, useMotionValue, useTransform } from "framer-motion";
 import {
-  Monitor,
-  Smartphone,
   BarChart3,
   Clock,
   Shield,
   Zap,
-  TrendingUp,
-  Users,
-  FileText,
-  CheckCircle,
-  Activity,
-  Globe,
-  Cloud,
-  Lock
+
 } from "lucide-react";
 import FreeTrialModal from "./FreeTrialModal"; // Importado o modal
 
